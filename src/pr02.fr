@@ -1,0 +1,12 @@
+module fr99.Pr02 where
+
+import frege.test.QuickCheck
+
+myButLast :: [a] -> a
+myButLast [] = error "list too small"
+myButLast [x] = myButLast []
+myButLast [a,b] = a
+myButLast (x:xs) = myButLast xs
+
+example1 = property $ \() -> myButLast [1,2,3,4] == 3
+example2 = property $ \() -> myButLast ['a'..'z'] == 'y'

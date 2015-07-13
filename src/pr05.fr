@@ -1,0 +1,11 @@
+module fr99.Pr05 where
+
+import frege.test.QuickCheck
+
+myReverse :: [a] -> [a]
+myReverse [] = []
+myReverse [x] = [x]
+myReverse (x:xs) = (myReverse xs) ++ [x]
+
+example1 = property $ \() -> myReverse (toList "A man, a plan, a canal, panama!") == (toList "!amanap ,lanac a ,nalp a ,nam A")
+example2 = property $ \() -> myReverse [1,2,3,4] == [4,3,2,1]
