@@ -1,0 +1,11 @@
+module fr99.Pr01 where
+
+import frege.test.QuickCheck
+
+myLast :: [a] -> a
+myLast [] = error "no last of an empty list"
+myLast [x] = x
+myLast (x:xs) = myLast xs
+
+example1 = property $ \() -> myLast [1,2,3,4] == 4
+example2 = property $ \() -> myLast ['x','y','z'] == 'z'
