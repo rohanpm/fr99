@@ -1,0 +1,16 @@
+module fr99.Pr07 where
+
+import frege.test.QuickCheck
+
+data NestedList a = Elem a | List [NestedList a]
+
+flatten :: NestedList a -> [a]
+flatten (Elem x) = [x]
+flatten (List xs) = fold (\memo \val -> memo ++ (flatten val)) [] xs
+
+example1 = property $ \() -> flatten (Elem 5) == [5]
+example2 = property $ \() -> flatten (List [Elem 1, List [Elem 2, List [Elem 3, Elem 4], Elem 5]]) == [1,2,3,4,5]
+
+-- fixme? In frege, [] == [] does not work (Ambiguous type). It does in GHCI.
+-- Specifying an arbitrary specific type on either side makes it work.
+example3 = property $ \() -> flatten (List []) == ([] :: [Int])
