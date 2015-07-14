@@ -25,11 +25,20 @@ define PROBLEM_template =
 	java -Xss1m -jar $(FREGE_JAR) -d build $$<
  ALL_CLASSES   += build/fr99/Pr$(1).class
  ALL_MODULES   += fr99.Pr$(1)
+ ALL_SOURCES   += src/pr$(1).fr
 endef
 
 $(foreach pr,$(PROBLEMS),$(eval $(call PROBLEM_template,$(pr))))
 
-default: $(ALL_CLASSES)
+# If build already exists, make incrementally (rebuild changed things),
+# otherwise build everything (much faster)
+default:
+	if test -d build/fr99; then $(MAKE) incr; else $(MAKE) all; fi
 
-check: $(ALL_CLASSES)
+incr: $(ALL_CLASSES)
+
+all: build $(ALL_SOURCES)
+	java -Xss1m -jar $(FREGE_JAR) -d build $(ALL_SOURCES)
+
+check: default
 	java -cp build:$(FREGE_JAR) frege.tools.Quick -v $(ALL_MODULES)
