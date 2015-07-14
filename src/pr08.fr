@@ -1,0 +1,11 @@
+module fr99.Pr08 where
+
+import frege.test.QuickCheck
+
+compress :: (Eq a) => [a] -> [a]
+compress xs = reverse $ fold (\memo \val -> case memo of
+                               []   -> [val]
+                               m:ms -> if m == val then memo else val:memo
+                             ) [] xs
+
+example1 = property $ compress (toList "aaaabccaadeeee") == (toList "abcade")
