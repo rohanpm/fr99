@@ -1,0 +1,12 @@
+module fr99.Pr06 where
+
+import frege.test.QuickCheck
+
+import fr99.Pr05 (myReverse)
+
+isPalindrome :: (Eq a) => [a] -> Bool
+isPalindrome xs = (myReverse xs) == xs
+
+example1 = property $ \() -> isPalindrome [1,2,3] == false
+example2 = property $ \() -> isPalindrome (toList "madamimadam") == true
+example3 = property $ \() -> isPalindrome [1,2,4,8,16,8,4,2,1] == true
