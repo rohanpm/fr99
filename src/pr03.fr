@@ -7,5 +7,5 @@ elementAt [] n = error "out of bounds"
 elementAt (x:xs) 1 = x
 elementAt (x:xs) n = elementAt xs (n - 1)
 
-example1 = property $ \() -> elementAt [1,2,3] 2 == 2
-example2 = property $ \() -> elementAt (toList "haskell") 5 == 'e'
+example1 = property $ elementAt [1,2,3] 2 == 2
+example2 = property $ elementAt (toList "haskell") 5 == 'e'

@@ -6,5 +6,5 @@ myLength :: [a] -> Int
 myLength [] = 0
 myLength (x:xs) = 1 + (myLength xs)
 
-example1 = property $ \() -> myLength [123, 456, 789] == 3
-example2 = property $ \() -> myLength (toList "Hello, world!") == 13
+example1 = property $ myLength [123, 456, 789] == 3
+example2 = property $ myLength (toList "Hello, world!") == 13
