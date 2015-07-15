@@ -1,0 +1,18 @@
+module fr99.Pr10 where
+
+import frege.test.QuickCheck
+import fr99.Pr09 (pack)
+
+encode :: (Eq a) => [a] -> [(Int,a)]
+encode l = map mapper (pack l)
+    where mapper []         = error "empty pack element is impossible"
+          mapper (all@x:xs) = ((length all), x)
+
+example1 = property $ encode (toList "aaaabccaadeeee")
+                      == 
+                      [(4,'a'),(1,'b'),(2,'c'),(2,'a'),(1,'d'),(4,'e')]
+
+-- run length is always > 0
+gt0 = property $ \(l :: [Int]) ->
+        0 == length (filter badEncoded (encode l))
+    where badEncoded x = (fst x) <= 0
