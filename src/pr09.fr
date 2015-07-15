@@ -1,0 +1,19 @@
+module fr99.Pr09 where
+
+import Data.List (group)
+import frege.test.QuickCheck
+
+pack :: (Eq a) => [a] -> [[a]]
+pack []     = []
+pack (x:xs) = [thispart] ++ (pack rest)
+    where (thispart, rest) = span (== x) (x:xs)
+
+
+example1 = property $ pack ['a', 'a', 'a', 'a', 'b', 'c', 'c', 'a', 
+                            'a', 'd', 'e', 'e', 'e', 'e']
+                           ==
+                           -- haskell/frege difference: strings are not lists
+                           (map toList ["aaaa","b","cc","aa","d","eeee"])
+
+-- seems to be the same thing as the group function
+pack_group = property $ \(xs :: [Int]) -> (pack xs) == (group xs)
