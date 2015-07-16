@@ -1,0 +1,11 @@
+module fr99.Pr14 where
+
+import frege.test.QuickCheck
+
+dupli :: [a] -> [a]
+dupli = concatMap (\x -> [x,x])
+
+example1 = property $ dupli [1, 2, 3] == [1,1,2,2,3,3]
+
+p_doubleLength = property $ \(xs :: [Int]) ->
+    (length (dupli xs)) == (2 * (length xs))
