@@ -1,0 +1,24 @@
+module fr99.Pr13 where
+
+import frege.test.QuickCheck
+import fr99.Pr11 (encodeModified, Encoded)
+
+encodeDirect :: (Eq a) => [a] -> [Encoded a]
+encodeDirect [] = []
+encodeDirect (x:xs) = let (out,last) = (fold folder ([], Single x) xs) in
+        out ++ [last]
+    where folder (out,prev) x = case ((val prev) == x) of
+                true -> (out, addOne prev)
+                _    -> (out ++ [prev], Single x)
+          addOne (Single x)     = Multiple 2 x
+          addOne (Multiple n x) = Multiple (n + 1) x
+          val    (Single x)     = x
+          val    (Multiple _ x) = x
+
+example1 = property $ encodeDirect (toList "aaaabccaadeeee")
+                      ==
+                      [Multiple 4 'a',Single 'b',Multiple 2 'c',
+                       Multiple 2 'a',Single 'd',Multiple 4 'e']
+
+p_sameAsPr11 = property $ \(xs :: [Int]) ->
+    (encodeModified xs) == (encodeDirect xs)
