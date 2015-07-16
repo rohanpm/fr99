@@ -1,0 +1,18 @@
+module fr99.Pr12 where
+
+import frege.test.QuickCheck
+import fr99.Pr11 (encodeModified, Encoded)
+
+decodeModified :: [Encoded a] -> [a]
+decodeModified xs = concatMap decodeOne xs
+    where decodeOne (Single a)     = [a]
+          decodeOne (Multiple n a) = replicate n a
+
+example1 = property $ decodeModified 
+       [Multiple 4 'a',Single 'b',Multiple 2 'c',
+        Multiple 2 'a',Single 'd',Multiple 4 'e']
+       ==
+       (toList "aaaabccaadeeee")
+
+p_encodeDecode = property $ \(xs :: [Int]) ->
+    (decodeModified (encodeModified xs)) == xs
