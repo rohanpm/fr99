@@ -1,0 +1,23 @@
+module fr99.Pr11 where
+
+import frege.test.QuickCheck
+import fr99.Pr09 (pack)
+
+data Encoded a = Multiple Int a | Single a
+derive Eq Encoded a
+
+encodeModified :: (Eq a) => [a] -> [Encoded a]
+encodeModified l = map mapper (pack l)
+    where mapper []         = error "empty pack element is impossible"
+          mapper (all@x:xs) = let len = (length all) in case len of
+            1 -> Single x
+            _ -> Multiple len x
+
+example1 = property $ encodeModified (toList "aaaabccaadeeee")
+                      ==
+                      [Multiple 4 'a', Single 'b', Multiple 2 'c', Multiple 2 'a', Single 'd', Multiple 4 'e']
+
+-- multiples are always > 1
+gt1 = property $ \(l :: [Int]) -> all ok (encodeModified l)
+  where ok (Single x)     = true
+        ok (Multiple n x) = n > 1
