@@ -1,0 +1,15 @@
+module fr99.Pr15 where
+
+import frege.test.QuickCheck
+
+repli :: [a] -> Int -> [a]
+repli [] _     = []
+repli _  0     = []
+repli xs 1     = xs
+repli (x:xs) n = [x] ++ (repli [x] (n - 1)) ++ (repli xs n)
+
+example1 = property $
+    (repli (toList "abc") 3) == (toList "aaabbbccc")
+
+p_likeReplicate = property $ \(xs :: [Int]) ->
+    (repli xs 37) == (concatMap (replicate 37) xs)
