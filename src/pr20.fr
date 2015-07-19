@@ -1,0 +1,14 @@
+module fr99.Pr20 where
+
+import frege.test.QuickCheck
+
+removeAt :: Int -> [a] -> (a,[a])
+removeAt n xs = removeAt' n xs []
+    where removeAt' _ [] _          = error "out of bounds"
+          removeAt' 1 (x:xs) prefix = (x, prefix ++ xs)
+          removeAt' n (x:xs) prefix = removeAt' (n - 1) xs (prefix ++ [x])
+
+example1 = property $
+    removeAt 2 (toList "abcd")
+    ==
+    ('b', (toList "acd"))
