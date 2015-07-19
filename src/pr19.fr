@@ -1,0 +1,20 @@
+module fr99.Pr19 where
+
+import frege.test.QuickCheck
+
+rotate :: [a] -> Int -> [a]
+rotate xs 0     = xs
+rotate (x:xs) 1 = xs ++ [x]
+rotate xs n
+    | n < 0     = rotate xs (n + (length xs))
+    | otherwise = rotate (rotate xs 1) (n - 1)
+
+example1 = property $
+    rotate ['a','b','c','d','e','f','g','h'] 3
+    ==
+    (toList "defghabc")
+ 
+example2 = property $
+    rotate ['a','b','c','d','e','f','g','h'] (-2)
+    ==
+    (toList "ghabcdef")
