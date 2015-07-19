@@ -2,7 +2,7 @@ FREGE_JAR=frege.jar
 FREGE_URL=https://github.com/Frege/frege/releases/download/3.22.324/frege3.22.524-gcc99d7e.jar
 FREGE_CHECKSUM=8508f5b1f03beb69311a059e9a1684dfd0212ed1501fa96626f1e0b69363338a 
 
-PROBLEMS=$(shell seq -w 01 20)
+PROBLEMS=$(shell seq -w 01 21)
 
 default:
 

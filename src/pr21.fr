@@ -1,0 +1,14 @@
+module fr99.Pr21 where
+
+import frege.test.QuickCheck
+
+insertAt :: a -> [a] -> Int -> [a]
+insertAt v xs n = insertAt' v xs n [] where
+    insertAt' v [] _ prefix     = prefix ++ [v]
+    insertAt' v xs 1 prefix     = prefix ++ (v:xs)
+    insertAt' v (x:xs) n prefix = insertAt' v xs (n - 1) (prefix ++ [x])
+
+example1 = property $
+    insertAt 'X' (toList "abcd") 2
+    ==
+    (toList "aXbcd")
