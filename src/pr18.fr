@@ -1,0 +1,17 @@
+module fr99.Pr18 where
+
+import frege.test.QuickCheck
+
+slice :: [a] -> Int -> Int -> [a]
+slice [] _ _ = []
+slice (all@x:xs) from to
+    | from > to = []
+    | from < 1  = slice all 1 to
+    | from > 1  = slice xs (from - 1) (to - 1)
+    | to == 1   = [x]
+    | otherwise = x:(slice xs 1 (to - 1))
+
+example1 = property $
+    slice ['a','b','c','d','e','f','g','h','i','k'] 3 7
+    ==
+    (toList "cdefg")
