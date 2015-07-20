@@ -1,0 +1,36 @@
+module fr99.Pr23 where
+
+import frege.test.QuickCheck
+
+import fr99.Pr20 (removeAt)
+import System.Random
+
+-- The problem only describes rnd_select with an internal RNG.
+-- Here (and in subsequent problems) we split out the RNG into
+-- a separate parameter so the function can be used outside
+-- of an IO context.
+
+rnd_select :: (RandomGen g) => [a] -> Int -> g -> ([a],g)
+rnd_select xs n g =
+    let (selected,_,g') = rnd_select' xs n [] g in
+    (selected,g')
+  where
+    rnd_select' :: (RandomGen g) => [a] -> Int -> [a] -> g -> ([a],[a],g)
+    rnd_select' xs 0 selected g = (selected,xs,g)
+    rnd_select' xs n selected g =
+        let (idx,g') = randomR (1, (length xs)) g in
+        let (val,rest) = removeAt idx xs in
+        rnd_select' rest (n - 1) (val:selected) g'
+
+rnd_selectIO :: [a] -> Int -> IO [a]
+rnd_selectIO xs n = do
+    g <- getStdGen
+    let (out,g' :: StdGen) = rnd_select xs n g
+    return out
+
+-- FIXME: not sure if (StdGen.make 1) is guaranteed to give the same result
+-- on different hosts.
+example1 = property $
+    let selected = fst $ rnd_select (toList "abcdefgh") 3 (StdGen.make 1) in
+    ['g','c','d'] == selected
+
