@@ -1,0 +1,19 @@
+module fr99.Pr25 where
+
+import frege.test.QuickCheck
+
+import fr99.Pr23 (rnd_select)
+
+import System.Random
+
+rnd_permu :: (RandomGen g) => [a] -> g -> ([a],g)
+rnd_permu xs g =
+    rnd_select xs (length xs) g
+
+example1 = property $
+    let out = fst $ rnd_permu (toList "abcdef") (StdGen.make 1) in
+    (toList "fabecd") == out
+
+in_out_length = property $ \(xs :: [Int], seed :: Long) ->
+    let out = fst $ rnd_permu xs (StdGen.make seed) in
+    (length out) == (length xs)
