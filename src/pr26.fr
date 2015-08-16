@@ -1,0 +1,21 @@
+module fr99.Pr26 where
+
+import frege.test.QuickCheck
+
+combinations :: Int -> [a] -> [[a]]
+combinations 0 xs     = []
+combinations 1 xs     = map (\x -> [x]) xs
+combinations _ []     = []
+combinations n (x:xs) =
+    x_com ++ xs_com
+  where
+    xs_com  = combinations n xs
+    xs_com' = combinations (n - 1) xs
+    x_com   = map (\ys -> x:ys) xs_com'
+
+example1 = property $
+    combinations 3 (toList "abcdef")
+    ==
+    map toList ["abc", "abd", "abe", "abf", "acd", "ace", "acf", "ade",
+                "adf", "aef", "bcd", "bce", "bcf", "bde", "bdf", "bef",
+                "cde", "cdf", "cef", "def"]
