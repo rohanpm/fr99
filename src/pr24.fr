@@ -1,0 +1,18 @@
+module fr99.Pr24 where
+
+import frege.test.QuickCheck
+
+import fr99.Pr22 (range)
+import fr99.Pr23 (rnd_select)
+
+import System.Random
+
+diff_select :: (RandomGen g) => Int -> Int -> g -> ([Int],g)
+diff_select n max g =
+    rnd_select nums n g
+  where
+    nums = range 1 max
+
+example1 = property $
+    let selected = fst $ diff_select 6 49 (StdGen.make 1) in
+    [45, 46, 10, 32, 25, 6] == selected
